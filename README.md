@@ -2,7 +2,7 @@
 
 ## Trabalho 1 — Análise de Complexidade em Estruturas de Listas
 
-**Disciplina:** Técnicas de Programação Avançada (TPA)
+**Disciplina:** Técnicas de Programação Avançada (TPA)  
 **Instituição:** IFES — Serra  
 **Grupo:** Kaiva Gums, Caio Rangel, João Victor Araujo  
 **Professor:** Victorio Albani
