@@ -1,10 +1,10 @@
 # README.md
 
-## Trabalho 1 — Análise de Complexidade em Estruturas de Listas
+## Trabalho 1 -- Análise de Complexidade em Estruturas de Listas
 
-**Disciplina:** Estrutura de Dados / Programação Orientada a Objetos em Java  
-**Instituição:** IFES — Serra  
-**Grupo:** Kaiva Gums, Caio Rangel, João Victor Araujo
+**Disciplina:** Técnicas de Programação Avançada (TPA)  
+**Instituição:** IFES -- Serra  
+**Grupo:** Kaiva Gums, Caio Rangel, João Victor Araujo  
 **Professor:** Victorio Albani
 
 ---
@@ -15,6 +15,6 @@ Este projeto implementa uma **biblioteca própria de lista encadeada genérica e
 
 O trabalho também inclui:
 
-- análise matemática de complexidade dos métodos da lista;
-- testes empíricos com arquivos de diferentes tamanhos;
-- geração de tabelas e gráficos para comparação entre listas ordenadas e não ordenadas.
+- Análise matemática de complexidade dos métodos da lista;
+- Testes empíricos com arquivos de diferentes tamanhos;
+- Geração de tabelas e gráficos para comparação entre listas ordenadas e não ordenadas.
