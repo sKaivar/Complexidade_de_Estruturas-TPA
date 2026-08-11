@@ -4,8 +4,8 @@
 
 **Disciplina:** Estrutura de Dados / Programação Orientada a Objetos em Java  
 **Instituição:** IFES — Serra  
-**Grupo:** _preencher_  
-**Professor:** _preencher_
+**Grupo:** Kaiva Gums, Caio Rangel, João Victor Araujo
+**Professor:** Victorio Albani
 
 ---
 
