@@ -26,7 +26,6 @@ public interface IColecao<T> {
      */
     public boolean adicionar(T novoValor);
     
-    
     /**
      * Método para pesquisar por um elemento na estrutura e retorná-lo.
      * @param valor - será utilizado para passar o valor da chave a ser buscada. Por exemplo, se for um estrutura de Alunos indexada por nome, deve-se passar um objeto do tipo aluno com o nome que se deseja buscar.

@@ -21,7 +21,23 @@ public class ListaEncadeada<T> implements IColecao<T>{
     @Override
     public boolean adicionar(T novoValor) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adicionar'");
+
+        //Start of Unordered adding elements methods
+        if(prim == null){
+            prim = new No<>(novoValor);
+            return true;
+        }//Adds a new Node to an empty list
+
+        No<T> novoNo = new No<>(novoValor);
+        novoNo.setProx(prim);
+        prim = novoNo;
+        /*Adds a new Node to a non-empty List
+        It adds at the first position because its faster than running to all the list
+        And adding to the last spot*/
+        return true;
+        //End of Unordered adding elements methods
+
+
     }
 
     @Override

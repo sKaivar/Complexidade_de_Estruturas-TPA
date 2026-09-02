@@ -21,6 +21,7 @@ public class Main {
      */
     public static void main(String[] args) {
         //Instanciando uma lista com Object
+
         IColecao<Aluno> l;
         l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);
         Aluno a;
