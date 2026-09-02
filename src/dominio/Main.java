@@ -25,10 +25,39 @@ public class Main {
         IColecao<Aluno> l;
         l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);
         Aluno a;
-        int mat, nota, resp;
-        String nome;
+        int ordenado = 0, mat, nota, resp;
+        String nome, todosAlunos;
         Scanner scanner = new Scanner(System.in);
-        try {            
+
+        do {
+            try {
+                System.out.println("Digite 1 para lista ordenada e 2 para lista não ordenada: ");
+                ordenado = scanner.nextInt();
+                scanner.nextLine();
+
+                if(ordenado != 1 && ordenado != 2){
+                    System.out.println("Digite apenas números.\n");
+                }
+            }catch (Exception e) {
+                System.out.println("ERRO! " + e.getMessage());
+                scanner.nextLine();
+                ordenado = 0;
+
+            }
+
+        }while(ordenado != 1 && ordenado != 2);
+
+        if(ordenado == 1){
+            l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), true);
+
+        } else if (ordenado == 2) {
+            l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);
+
+        }else{
+            System.out.println("Erro em decidir se lista é ordenada ou não.\n");
+        }
+
+        try {
             do{
                 System.out.println("Digite a matricula do aluno");
                 mat = scanner.nextInt();
@@ -39,6 +68,8 @@ public class Main {
                 nota = scanner.nextInt();
                 a = new Aluno(mat, nome, nota);
                 l.adicionar(a);
+                todosAlunos = l.toString();
+                System.out.println(todosAlunos);
                 System.out.println("Digite 1 para adicionar mais alunos ou outro numero para parar");
                 resp = scanner.nextInt();
             }while(resp==1);
