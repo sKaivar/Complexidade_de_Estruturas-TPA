@@ -4,9 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 /** Gera um arquivo entrada.txt contendo contatos no formato:
  *  Nome Sobrenome;Telefone */
+/**
 public class GeradorArquivos {
 
     private static final int QUANTIDADE = 10000;
@@ -65,5 +67,80 @@ public class GeradorArquivos {
 
     private static String gerarTelefone(int i) {
         return String.format("279%08d", i);
+    }
+}**/
+/** Gera um arquivo entrada.txt contendo alunos no formato:
+ *  matricula;nome;nota */
+public class GeradorArquivos {
+
+    private static final int QUANTIDADE = 100;
+
+    public static void main(String[] args) {
+
+        File pasta = new File("dados");
+
+        if (!pasta.exists()) {
+            pasta.mkdirs();
+        }
+
+        File arquivo = new File(pasta, "entrada"+ QUANTIDADE +".txt");
+
+        long inicio = System.nanoTime();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))) {
+
+            for (int i = 1; i <= QUANTIDADE; i++) {
+
+                String matricula = gerarMatricula(i);
+                String nome = gerarNome(i);
+                Integer nota = gerarNota();
+
+                writer.write(matricula + ";" +  nome + ";" + nota);
+                writer.newLine();
+            }
+
+            long fim = System.nanoTime();
+
+            double tempoMs = (fim - inicio) / 1_000_000.0;
+
+            System.out.println("Arquivo gerado com sucesso!");
+            System.out.println("Local: " + arquivo.getAbsolutePath());
+            System.out.println("Contatos gerados: " + QUANTIDADE);
+            System.out.printf("Tempo de geração: %.2f ms%n", tempoMs);
+
+        } catch (IOException e) {
+            System.err.println("Erro ao gerar o arquivo: " + e.getMessage());
+        }
+    }
+
+    private static String gerarNome(int i) {
+        String[] nomes = {
+                "Ana", "Bruno", "Carla", "Daniel", "Eduarda",
+                "Felipe", "Gabriela", "Henrique", "Isabela", "João"
+        };
+
+        String[] sobrenomes = {
+                "Silva", "Souza", "Oliveira", "Santos", "Pereira",
+                "Costa", "Rodrigues", "Almeida", "Nascimento", "Lima"
+        };
+
+        return nomes[i % nomes.length] + " "
+                + sobrenomes[i % sobrenomes.length] + i;
+    }
+
+    private static String gerarMatricula(int i) {
+        return String.format("%08d", i);
+        //%d pede para colocar um inteiro naquele lugar, o ~i~
+        //O 08, no meio do %d fala para colocar 8 zeros naquele lugar
+        //Juntos eles ficariam assim: 00000000i
+    }
+
+    private static Integer gerarNota() {
+
+        Random random = new Random();
+
+        //Numero aleatorio entre 0 e 10 (11 numeros: 0,1,2,3...10)
+        return random.nextInt(11);
+
     }
 }
