@@ -5,6 +5,10 @@
  */
 package dominio;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 import colecao.IColecao;
@@ -19,6 +23,48 @@ public class Main {
     /**
      * @param args the command line arguments
      */
+
+    public static void carregarTxt(String nomeArquivo, IColecao<Aluno> l){
+        int totalAlunos = 0;
+
+        try(BufferedReader br = new BufferedReader(new FileReader(nomeArquivo))){
+
+            String linha;
+
+
+            while((linha = br.readLine()) != null){
+
+                String[] dados = linha.split(";");
+
+                int matricula = Integer.parseInt(dados[0]);
+                String nome = dados[1];
+                int nota = Integer.parseInt(dados[2]);
+
+
+                Aluno aluno = new Aluno(matricula, nome, nota);
+
+                l.adicionar(aluno);
+                totalAlunos +=1;
+            }
+
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo:" + e.getMessage());
+        }
+
+        System.out.println("Arquivo gerado com sucesso!");
+        System.out.println("Contatos gerados: " + totalAlunos);
+    }
+
+    public static File[] listarArquivosTxt(String pasta){
+
+        File diretorio = new File(pasta);
+
+        File[] arquivos = diretorio.listFiles((dir, nome) -> nome.endsWith(".txt")); // Lista todos arquivos txt em uma pasta
+
+        return arquivos;
+    }
+
+
     public static void main(String[] args) {
 
 
@@ -75,7 +121,43 @@ public class Main {
 
                 switch (resp){
                     case 1:
-                        System.out.println("1: Carregar alunos de arquivo - FALTA IMPLEMENTAR");
+                        try{
+                            File[] arquivos = listarArquivosTxt("dados"); //Todos arquivos dentro da pasta dados
+
+                            System.out.println("Escolha um dos arquivos a seguir (estão todos dentro da pasta dados):");
+
+                            for (int i = 0; i < arquivos.length; i++){
+                                System.out.println((i+1) + " - " + arquivos[i].getName());
+                            }
+
+                            resp = scanner.nextInt();
+                            scanner.nextLine();// Receives Choosen File
+
+                            if(resp < 1 || resp > arquivos.length){
+                                System.out.println("Arquivo não encontrado");
+                                break;
+                            }// Se resposta for menor que 1 ou resposta maior que quantidade de arquivos, devolve erro
+
+                            File arquivoEscolhido = arquivos[resp - 1];
+
+                            long inicio = System.nanoTime();// Inicio da contagem de tempo
+                            carregarTxt(arquivoEscolhido.getPath(), l);
+                            long fim = System.nanoTime(); // Final contagem de tempo
+
+                            double tempoMs = (fim - inicio) / 1_000_000.0; // Calculo contagem de tempo
+
+                            System.out.printf("Tempo de geração: %.2f ms%n", tempoMs);
+
+
+
+                        } catch (Exception e) {
+                            System.out.println("ERRO! " + e.getMessage());
+                            scanner.nextLine();
+                        }// Qualquer outra coisa, devolve erro
+
+
+
+                        //loads choosen file with carregarTxt();
                         break;
                     case 2:
                         try{
