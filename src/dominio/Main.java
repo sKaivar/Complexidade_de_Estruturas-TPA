@@ -20,13 +20,14 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //Instanciando uma lista com Object
 
-        IColecao<Aluno> l;
-        l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);
-        Aluno a;
-        int ordenado = 0, mat, nota, resp;
-        String nome, todosAlunos;
+
+        IColecao<Aluno> l; //Object type IColecao
+        l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false); //Object l has an empty list as value
+        Aluno a;//Empty object class Aluno
+        int ordenado = 0, mat, nota, resp = 10; //Ordenado (tells if user wants a ordered list or not), mat (matricula), nota, resp(any integer choice of user)
+        String nome, todosAlunos; //nome (Aluno`s name), todoAlunos (print array with all students)
+
         Scanner scanner = new Scanner(System.in);
 
         do {
@@ -57,39 +58,69 @@ public class Main {
             System.out.println("Erro em decidir se lista é ordenada ou não.\n");
         }
 
-        try {
-            do{
-                System.out.println("Digite a matricula do aluno");
-                mat = scanner.nextInt();
-                scanner.nextLine();
-                System.out.println("Digite o nome do aluno");
-                nome = scanner.nextLine();
-                System.out.println("Digite a nota do aluno");
-                nota = scanner.nextInt();
-                a = new Aluno(mat, nome, nota);
-                l.adicionar(a);
-                todosAlunos = l.toString();
-                System.out.println(todosAlunos);
-                System.out.println("Digite 1 para adicionar mais alunos ou outro numero para parar");
-                resp = scanner.nextInt();
-            }while(resp==1);
+        //Start of Menu
+        do{
+            try{
+                System.out.println("___________");
+                System.out.println("Menu: ");
+                System.out.println("1: Carregar alunos de arquivo");
+                System.out.println("2: Adicionar contato");
+                System.out.println("3: Pesquisar contato por nome");
+                System.out.println("4: Pesquisar contato por telefone");
+                System.out.println("5: Remover contato por telefone");
+                System.out.println("6: Alterar dados de um contato");
+                System.out.println("0: Sair");
 
-            do{
-                System.out.println("Digite a matricula do aluno a ser procurado");
-                mat = scanner.nextInt();
-                a = l.pesquisar(new Aluno(mat,"",0));
-                if (a==null)
-                    System.out.println("Aluno não existe");
-                else
-                    System.out.println("Aluno encontrado " + a);
-                System.out.println("Digite 1 para adicionar mais alunos ou outro numero para parar");
                 resp = scanner.nextInt();
-            }while(resp==1);
-            scanner.close();
-        } catch (Exception e) {
-            scanner.close();
-            System.out.println("ERRO! " + e.getMessage());
-        }
+
+                switch (resp){
+                    case 1:
+                        System.out.println("1: Carregar alunos de arquivo - FALTA IMPLEMENTAR");
+                        break;
+                    case 2:
+                        try{
+                        System.out.println("Digite a matricula do aluno");
+                        mat = scanner.nextInt();
+                        scanner.nextLine();// Receives Student number
+
+                        System.out.println("Digite o nome do aluno");
+                        nome = scanner.nextLine();// Receives Student name
+
+                        System.out.println("Digite a nota do aluno");
+                        nota = scanner.nextInt(); // Receives Student grade
+
+                        a = new Aluno(mat, nome, nota);
+                        l.adicionar(a);// Adds new Student to array
+
+                        todosAlunos = l.toString();
+                        System.out.println(todosAlunos);// Prints all students in array
+                        } catch (Exception e) {
+                            scanner.nextLine();
+                            System.out.println("Se atente ao preencher os dados do aluno." + e.getMessage());
+                        }
+                        break;
+
+                    case 3:
+                        System.out.println("3: Pesquisar contato por nome - FALTA IMPLEMENTAR");
+                        break;
+                    case 4:
+                        System.out.println("4: Pesquisar contato por telefone - FALTA IMPLEMENTAR");
+                        break;
+                    case 5:
+                        System.out.println("5: Remover contato por telefone - FALTA IMPLEMENTAR");
+                        break;
+                    case 6:
+                        System.out.println("6: Alterar dados de um contato - FALTA IMPLEMENTAR");
+                        break;
+                }
+            }catch (Exception e) {
+                scanner.nextLine();// Cleans if input is wrong type
+                System.out.println("ERRO! " + e.getMessage());// Tells the error message
+            }
+
+        }while(resp != 0);
+        System.out.println("Programa encerrado.");
+        scanner.close();
 
     }
 }
