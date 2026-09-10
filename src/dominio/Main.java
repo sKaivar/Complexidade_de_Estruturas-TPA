@@ -146,6 +146,7 @@ public class Main {
 
                             double tempoMs = (fim - inicio) / 1_000_000.0; // Calculo contagem de tempo
 
+                            System.out.println("Contatos gerados: " + QUANTIDADE);
                             System.out.printf("Tempo de geração: %.2f ms%n", tempoMs);
 
 
