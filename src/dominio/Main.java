@@ -20,10 +20,6 @@ import listaencadeada.*;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-
     public static void carregarTxt(String nomeArquivo, IColecao<Aluno> l){
         int totalAlunos = 0;
 
@@ -64,7 +60,9 @@ public class Main {
         return arquivos;
     }
 
-
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
 
 
