@@ -20,8 +20,7 @@ public class Aluno {
         this.matricula = matricula;
         this.nota = nota;
     }
-    
-    
+
     @Override
     public boolean equals(Object a){
         if (a instanceof Aluno)

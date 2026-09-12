@@ -125,7 +125,7 @@ public class GeradorArquivos {
         };
 
         return nomes[i % nomes.length] + " "
-                + sobrenomes[i % sobrenomes.length] + i;
+                + sobrenomes[i % sobrenomes.length];
     }
 
     private static String gerarMatricula(int i) {
