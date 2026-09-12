@@ -105,8 +105,34 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
     @Override
     public T pesquisar(T valor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'pesquisar'");
+        return pesquisar(valor, this.comparador);
+    }
+
+    // Permite buscar por outro critério (nesse caso, nome), mais facil de implementar no menu
+    public T pesquisar(T valor, Comparator<T> criterio) {
+        if (criterio == null) {
+            throw new IllegalArgumentException("Um comparador válido é necessário para a pesquisa.");
+        }
+
+        No<T> atual = this.prim;
+
+        while (atual != null) {
+            int cmp = criterio.compare(valor, atual.getValor());
+
+            if (cmp == 0) {
+                return atual.getValor();
+            }
+
+            // Se a lista tiver ordenada pelo critério passado, para de procurar caso passe da posição onde deveria estar.
+            // Adicionado "this.comparador != null" para evitar NPE no .getClass() caso a lista não tenha comparador base.
+            if (this.ehOrdenada && this.comparador != null && criterio.getClass() == this.comparador.getClass() && cmp < 0) {
+                break;
+            }
+
+            atual = atual.getProx();
+        }
+
+        return null;
     }
 
     @Override
