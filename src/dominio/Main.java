@@ -51,8 +51,8 @@ public class Main {
             System.out.println("Erro ao ler o arquivo:" + e.getMessage());
         }
 
-        System.out.println("Arquivo gerado com sucesso!");
-        System.out.println("Contatos gerados: " + totalAlunos);
+        System.out.println("Arquivo lido com sucesso!");
+        System.out.println("Contatos lidos: " + totalAlunos);
     }
 
     public static File[] listarArquivosTxt(String pasta){
@@ -69,9 +69,9 @@ public class Main {
 
 
         IColecao<Aluno> l; //Object type IColecao
-        l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false); //Object l has an empty list as value
+        l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);//Initiates List
         Aluno a;//Empty object class Aluno
-        int ordenado = 0, mat, nota, resp = 10; //Ordenado (tells if user wants a ordered list or not), mat (matricula), nota, resp(any integer choice of user)
+        int ordenado = 0, mat, nota, resp = 10; //Ordenado (tells if user wants an ordered list or not), mat (matricula), nota, resp(any integer choice of user)
         String nome, todosAlunos; //nome (Aluno`s name), todoAlunos (print array with all students)
 
         Scanner scanner = new Scanner(System.in);
@@ -95,10 +95,12 @@ public class Main {
         }while(ordenado != 1 && ordenado != 2);
 
         if(ordenado == 1){
-            l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), true);
+            l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), true);//Object l has an empty list as value (by matricula)
+            //l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorNome(), true); //Object l has an empty list as value (by name)
 
         } else if (ordenado == 2) {
-            l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);
+            l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);//Object l has an empty list as value (It doesnt matter if by name or matricula)
+
 
         }else{
             System.out.println("Erro em decidir se lista é ordenada ou não.\n");
@@ -146,7 +148,7 @@ public class Main {
 
                             double tempoMs = (fim - inicio) / 1_000_000.0; // Calculo contagem de tempo
 
-                            System.out.printf("Tempo de geração: %.2f ms%n", tempoMs);
+                            System.out.printf("Tempo de leitura: %.2f ms%n", tempoMs);
 
 
 
@@ -183,16 +185,16 @@ public class Main {
                         break;
 
                     case 3:
-                        System.out.println("3: Pesquisar contato por nome - FALTA IMPLEMENTAR");
+                        System.out.println("3: Pesquisar aluno por nome - FALTA IMPLEMENTAR");
                         break;
                     case 4:
-                        System.out.println("4: Pesquisar contato por telefone - FALTA IMPLEMENTAR");
+                        System.out.println("4: Pesquisar aluno por matricula - FALTA IMPLEMENTAR");
                         break;
                     case 5:
-                        System.out.println("5: Remover contato por telefone - FALTA IMPLEMENTAR");
+                        System.out.println("5: Remover contato por matricula - FALTA IMPLEMENTAR");
                         break;
                     case 6:
-                        System.out.println("6: Alterar dados de um contato - FALTA IMPLEMENTAR");
+                        System.out.println("6: Alterar dados de um aluno - FALTA IMPLEMENTAR");
                         break;
                 }
             }catch (Exception e) {
@@ -201,6 +203,7 @@ public class Main {
             }
 
         }while(resp != 0);
+        System.out.println("A quantidade total de Alunos é " + l.quantidadeNos());
         System.out.println("Programa encerrado.");
         scanner.close();
 
