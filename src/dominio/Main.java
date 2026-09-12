@@ -48,7 +48,7 @@ public class Main {
         }
 
         System.out.println("Arquivo lido com sucesso!");
-        System.out.println("Contatos lidos: " + totalAlunos);
+        System.out.println("Alunos lidos: " + totalAlunos);
     }
 
     public static File[] listarArquivosTxt(String pasta){
@@ -110,11 +110,11 @@ public class Main {
                 System.out.println("___________");
                 System.out.println("Menu: ");
                 System.out.println("1: Carregar alunos de arquivo");
-                System.out.println("2: Adicionar contato");
-                System.out.println("3: Pesquisar contato por nome");
-                System.out.println("4: Pesquisar contato por telefone");
-                System.out.println("5: Remover contato por telefone");
-                System.out.println("6: Alterar dados de um contato");
+                System.out.println("2: Adicionar aluno");
+                System.out.println("3: Pesquisar aluno por nome");
+                System.out.println("4: Pesquisar aluno por matrícula");
+                System.out.println("5: Remover aluno por matrícula");
+                System.out.println("6: Alterar dados de um aluno");
                 System.out.println("0: Sair");
 
                 resp = scanner.nextInt();
@@ -161,21 +161,21 @@ public class Main {
                         break;
                     case 2:
                         try{
-                        System.out.println("Digite a matricula do aluno");
-                        mat = scanner.nextInt();
-                        scanner.nextLine();// Receives Student number
+                            System.out.println("Digite a matricula do aluno");
+                            mat = scanner.nextInt();
+                            scanner.nextLine();// Receives Student number
 
-                        System.out.println("Digite o nome do aluno");
-                        nome = scanner.nextLine();// Receives Student name
+                            System.out.println("Digite o nome do aluno");
+                            nome = scanner.nextLine();// Receives Student name
 
-                        System.out.println("Digite a nota do aluno");
-                        nota = scanner.nextInt(); // Receives Student grade
+                            System.out.println("Digite a nota do aluno");
+                            nota = scanner.nextInt(); // Receives Student grade
 
-                        a = new Aluno(mat, nome, nota);
-                        l.adicionar(a);// Adds new Student to array
+                            a = new Aluno(mat, nome, nota);
+                            l.adicionar(a);// Adds new Student to array
 
-                        todosAlunos = l.toString();
-                        System.out.println(todosAlunos);// Prints all students in array
+                            todosAlunos = l.toString();
+                            System.out.println(todosAlunos);// Prints all students in array
                         } catch (Exception e) {
                             scanner.nextLine();
                             System.out.println("Se atente ao preencher os dados do aluno." + e.getMessage());
@@ -183,13 +183,61 @@ public class Main {
                         break;
 
                     case 3:
-                        System.out.println("3: Pesquisar aluno por nome - FALTA IMPLEMENTAR");
+                        try {
+                            System.out.println("Digite o nome do aluno a pesquisar");
+                            scanner.nextLine();
+                            nome = scanner.nextLine();
+
+                            Aluno chaveNome = new Aluno(0, nome, 0);
+
+                            long inicioPesqNome = System.nanoTime();
+                            Aluno encontradoPorNome = ((ListaEncadeada<Aluno>) l)
+                                    .pesquisar(chaveNome, new ComparadorAlunoPorNome());
+                            long fimPesqNome = System.nanoTime();
+
+                            double tempoPesqNomeMs = (fimPesqNome - inicioPesqNome) / 1_000_000.0;
+
+                            if (encontradoPorNome != null) {
+                                System.out.println("Aluno encontrado: " + encontradoPorNome);
+                            } else {
+                                System.out.println("Aluno com nome \"" + nome + "\" não encontrado.");
+                            }
+                            System.out.printf("Tempo de pesquisa: %.4f ms%n", tempoPesqNomeMs);
+
+                        } catch (Exception e) {
+                            scanner.nextLine();
+                            System.out.println("ERRO! " + e.getMessage());
+                        }
                         break;
                     case 4:
-                        System.out.println("4: Pesquisar aluno por matricula - FALTA IMPLEMENTAR");
+                        try {
+                            System.out.println("Digite a matrícula do aluno a pesquisar");
+                            mat = scanner.nextInt();
+                            scanner.nextLine();
+
+                            Aluno chaveMatricula = new Aluno(mat, "", 0);
+
+                            long inicioPesqMat = System.nanoTime();
+                            // Método da interface -> usa o comparador definido na construção da lista (matrícula)
+                            Aluno encontradoPorMatricula = l.pesquisar(chaveMatricula);
+                            long fimPesqMat = System.nanoTime();
+
+                            double tempoPesqMatMs = (fimPesqMat - inicioPesqMat) / 1_000_000.0;
+
+                            if (encontradoPorMatricula != null) {
+                                System.out.println("Aluno encontrado: " + encontradoPorMatricula);
+                            } else {
+                                System.out.println("Aluno com matrícula " + mat + " não encontrado.");
+                            }
+                            System.out.printf("Tempo de pesquisa: %.4f ms%n", tempoPesqMatMs);
+
+                        } catch (Exception e) {
+                            scanner.nextLine();
+                            System.out.println("ERRO! " + e.getMessage());
+                        }
                         break;
                     case 5:
-                        System.out.println("5: Remover contato por matricula - FALTA IMPLEMENTAR");
+                        System.out.println("5: Remover aluno por matricula - FALTA IMPLEMENTAR");
                         break;
                     case 6:
                         System.out.println("6: Alterar dados de um aluno - FALTA IMPLEMENTAR");
