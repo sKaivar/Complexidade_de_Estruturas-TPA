@@ -4,7 +4,8 @@ import colecao.IColecao;
 import java.util.Comparator;
 
 public class ListaEncadeada<T> implements IColecao<T>{
-    private No<T> prim;
+    private No<T> prim, ult;
+    private int quant;
     private final Comparator<T> comparador;
     private final boolean ehOrdenada;
 
@@ -35,28 +36,71 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
     @Override
     public boolean adicionar(T novoValor) {
-        // TODO Auto-generated method stub
 
-        if(!ehOrdenada){ //Start of Unordered adding elements methods
-            if(prim == null){
-                prim = new No<>(novoValor);
-                return true;
-            }//Adds a new Node to an empty list
+        if (!ehOrdenada) {
+            return inserirElementoNaoOrd(novoValor);
+        } else {
+            return inserirElementoOrd(novoValor);
+        }
+    }
 
-            No<T> novoNo = new No<>(novoValor);
-            novoNo.setProx(prim);
-            prim = novoNo;
-            /*Adds a new Node to a non-empty List
-            It adds at the first position because its faster than running to all the list
-            And adding to the last spot*/
+    public boolean inserirElementoNaoOrd(T novoValor) {
 
+        if (prim == null) {
+            prim = new No<>(novoValor);
             return true;
         }
 
-        //Start of Ordered adding elements methods
+        No<T> novoNo = new No<>(novoValor);
+        novoNo.setProx(prim);
+        prim = novoNo;
+
         return true;
+    }
+
+    public boolean inserirElementoOrd(T novoValor){
+
+        No<T> novoNo = new No<>(novoValor);
+        No<T> atual, ant;
+
+        atual = this.prim;
+        ant = null;
+
+        if(this.prim == null){//Se lista estiver vazia, cria novo no e adiciona no prim (primeiro na lista)
+            this.prim = this.ult=novoNo;
+
+        }else{// Enquanto não é o ultimo da lista e é maior que o atual, vai para o próximo
+
+            while(atual != null){// Enquanto novoValor for maior que atual.getValor
+
+                if(comparador.compare(novoValor, atual.getValor()) == 0){ // O novo no possui o mesmo valor de um no da lista, logo não é adicionado
+                    System.out.println("Aluno não adicionado pois já existe.");
+                    return false;
+
+                } else if (comparador.compare(novoValor, atual.getValor()) < 0) {// O novo no é menor que o No atual, então quebra do loop e realiza os checks
+                    break;
+                }
+
+                ant = atual; // No atual vira o anterior
+                atual = atual.getProx(); // Atual passa apontar para o próximo No
+            }
+            if(ant == null){// No for menor que o primeiro No da lista, logo tem que ser o novo primeiro No
+                novoNo.setProx(this.prim);
+                this.prim = novoNo;
+
+            } else if (atual == null ) {// Chegou ao final da lista, No vai ser inserido na última posição
+                this.ult.setProx(novoNo);
+                this.ult = novoNo;
 
 
+            } else{
+                ant.setProx(novoNo);
+                novoNo.setProx(atual);
+            }
+
+        }
+        this.quant++;
+        return true;
     }
 
     @Override
@@ -73,8 +117,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
     @Override
     public int quantidadeNos() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'quantidadeNos'");
+        return quant;
     }
 
     
