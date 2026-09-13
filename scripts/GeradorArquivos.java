@@ -73,7 +73,7 @@ public class GeradorArquivos {
  *  matricula;nome;nota */
 public class GeradorArquivos {
 
-    private static final int QUANTIDADE = 100;
+    private static final int QUANTIDADE = 200000;
 
     public static void main(String[] args) {
 
