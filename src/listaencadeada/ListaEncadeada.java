@@ -34,6 +34,11 @@ public class ListaEncadeada<T> implements IColecao<T>{
         return (s + "]");
     } // Creates a toString so it possible to print all elements in a pretty way
 
+    public T ultimoValor() {
+        return (ult == null) ? null : ult.getValor();
+    }
+
+    //_______________________________Adicionar
     @Override
     public boolean adicionar(T novoValor) {
 
@@ -45,16 +50,17 @@ public class ListaEncadeada<T> implements IColecao<T>{
     }
 
     public boolean inserirElementoNaoOrd(T novoValor) {
+        No<T> novoNo = new No<>(novoValor);
 
         if (prim == null) {
-            prim = new No<>(novoValor);
-            return true;
+            prim = novoNo;
+            ult = novoNo;
+        }else{
+            novoNo.setProx(prim);
+            prim = novoNo;
         }
 
-        No<T> novoNo = new No<>(novoValor);
-        novoNo.setProx(prim);
-        prim = novoNo;
-
+        quant++;
         return true;
     }
 
@@ -71,19 +77,11 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
         }else{// Enquanto não é o ultimo da lista e é maior que o atual, vai para o próximo
 
-            while(atual != null){// Enquanto novoValor for maior que atual.getValor
-
-                if(comparador.compare(novoValor, atual.getValor()) == 0){ // O novo no possui o mesmo valor de um no da lista, logo não é adicionado
-                    System.out.println("Aluno não adicionado pois já existe.");
-                    return false;
-
-                } else if (comparador.compare(novoValor, atual.getValor()) < 0) {// O novo no é menor que o No atual, então quebra do loop e realiza os checks
-                    break;
-                }
-
-                ant = atual; // No atual vira o anterior
-                atual = atual.getProx(); // Atual passa apontar para o próximo No
+            while (atual != null && comparador.compare(novoValor, atual.getValor()) >= 0) { // Enquanto atual não for null e novoValor for maior ou igual que atual.getValor
+                ant = atual;// No atual vira o anterior
+                atual = atual.getProx();// Atual passa apontar para o próximo No
             }
+
             if(ant == null){// No for menor que o primeiro No da lista, logo tem que ser o novo primeiro No
                 novoNo.setProx(this.prim);
                 this.prim = novoNo;
@@ -103,6 +101,8 @@ public class ListaEncadeada<T> implements IColecao<T>{
         return true;
     }
 
+
+    //_______________________________Pesquisar
     @Override
     public T pesquisar(T valor) {
         return pesquisar(valor, this.comparador);
@@ -135,6 +135,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
         return null;
     }
 
+    //_______________________________Remover
     @Override
     public boolean remover(T valor) {
         // TODO Auto-generated method stub
