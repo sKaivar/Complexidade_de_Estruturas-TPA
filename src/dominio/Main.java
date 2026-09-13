@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Scanner;
 
 import colecao.IColecao;
@@ -20,35 +21,37 @@ import listaencadeada.*;
  */
 public class Main {
 
-    public static void carregarTxt(String nomeArquivo, IColecao<Aluno> l){
-        int totalAlunos = 0;
+    private static final Comparator<Aluno> ComparaMatricula = new ComparadorAlunoPorMatricula();
 
-        try(BufferedReader br = new BufferedReader(new FileReader(nomeArquivo))){
+    public static int carregarTxt(String nomeArquivo, IColecao<Aluno> l){
+        int total = 0;
 
+        try (BufferedReader br = new BufferedReader(new FileReader(nomeArquivo))) {
             String linha;
-
-
-            while((linha = br.readLine()) != null){
-
+            while ((linha = br.readLine()) != null) {
+                if (linha.isBlank()) {
+                    continue;
+                }
                 String[] dados = linha.split(";");
+                if (dados.length < 3) {
+                    continue;
+                }
+                Aluno aluno = new Aluno(
+                        Integer.parseInt(dados[0].trim()),
+                        dados[1].trim(),
+                        Integer.parseInt(dados[2].trim()));
 
-                int matricula = Integer.parseInt(dados[0]);
-                String nome = dados[1];
-                int nota = Integer.parseInt(dados[2]);
-
-
-                Aluno aluno = new Aluno(matricula, nome, nota);
-
-                l.adicionar(aluno);
-                totalAlunos +=1;
+                if (l.adicionar(aluno)) {
+                    total++;
+                }
             }
-
         } catch (IOException e) {
-            System.out.println("Erro ao ler o arquivo:" + e.getMessage());
+            System.out.println("Erro ao ler o arquivo: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Arquivo com formato inválido: " + e.getMessage());
         }
 
-        System.out.println("Arquivo lido com sucesso!");
-        System.out.println("Alunos lidos: " + totalAlunos);
+        return total;
     }
 
     public static File[] listarArquivosTxt(String pasta){
@@ -161,9 +164,16 @@ public class Main {
                         break;
                     case 2:
                         try{
+
                             System.out.println("Digite a matricula do aluno");
                             mat = scanner.nextInt();
                             scanner.nextLine();// Receives Student number
+
+                            if (buscar(l, new Aluno(mat, "", 0), ComparaMatricula) != null) {
+                                System.out.println("Já existe um aluno com a matrícula " + mat + ". Operação cancelada.");
+                                break;
+                            }
+
 
                             System.out.println("Digite o nome do aluno");
                             nome = scanner.nextLine();// Receives Student name
@@ -180,6 +190,7 @@ public class Main {
                             scanner.nextLine();
                             System.out.println("Se atente ao preencher os dados do aluno." + e.getMessage());
                         }
+
                         break;
 
                     case 3:
@@ -240,9 +251,67 @@ public class Main {
                         System.out.println("5: Remover aluno por matricula - FALTA IMPLEMENTAR");
                         break;
                     case 6:
-                        System.out.println("6: Alterar dados de um aluno - FALTA IMPLEMENTAR");
+                        try{
+                            System.out.println("Digite a matrícula do que deseja alterar");
+                            mat = scanner.nextInt();
+                            scanner.nextLine();
+
+                            Aluno chaveMatricula = new Aluno(mat, "", 0);
+                            Aluno encontradoPorMatricula = l.pesquisar(chaveMatricula); // Procura por Aluno que deseja alterar
+
+                            if (encontradoPorMatricula != null) {
+                                System.out.println("Aluno encontrado: " + encontradoPorMatricula);
+                            } else {
+                                System.out.println("Aluno com matrícula " + mat + " não encontrado.");
+                                break;
+                            }
+
+                            System.out.println("O que deseja alterar?");
+                            System.out.println("1: Matricula");
+                            System.out.println("2: Nome");
+                            System.out.println("3: Nota");
+                            resp = scanner.nextInt();
+                            scanner.nextLine();
+
+                            try{
+                                if(resp == 1){
+                                    System.out.println("Digite a nova matricula:");
+                                    mat = scanner.nextInt();
+                                    scanner.nextLine();// Receives Student number
+
+                                    if (buscar(l, new Aluno(mat, "", 0), ComparaMatricula) != null) {
+                                        System.out.println("Já existe um aluno com a matrícula " + mat + ". Operação cancelada.");
+                                        break;
+                                    }
+
+                                    encontradoPorMatricula.setMatricula(mat);
+
+                                }else if(resp == 2){
+                                    System.out.println("Digite a novo nome:");
+                                    nome = scanner.nextLine();// Receives Student name
+
+                                    encontradoPorMatricula.setNome(nome);
+
+                                }else if(resp == 3){
+                                    System.out.println("Digite a nova nota:");
+                                    nota = scanner.nextInt();// Receives Student nota
+                                    scanner.nextLine();
+
+                                    encontradoPorMatricula.setNota(nota);
+                                }
+
+                            } catch (Exception e) {
+                                scanner.nextLine();
+                                System.out.println("ERRO! " + e.getMessage());
+                            }
+
+                        } catch (Exception e) {
+                            scanner.nextLine();
+                            System.out.println("ERRO! " + e.getMessage());
+                        }
                         break;
                 }
+
             }catch (Exception e) {
                 scanner.nextLine();// Cleans if input is wrong type
                 System.out.println("ERRO! " + e.getMessage());// Tells the error message
@@ -253,5 +322,12 @@ public class Main {
         System.out.println("Programa encerrado.");
         scanner.close();
 
+    }
+
+    private static Aluno buscar(IColecao<Aluno> lista, Aluno chave, Comparator<Aluno> criterio) {
+        if (lista instanceof ListaEncadeada) {
+            return ((ListaEncadeada<Aluno>) lista).pesquisar(chave, criterio);
+        }
+        return lista.pesquisar(chave);
     }
 }
