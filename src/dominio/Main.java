@@ -248,7 +248,38 @@ public class Main {
                         }
                         break;
                     case 5:
-                        System.out.println("5: Remover aluno por matricula - FALTA IMPLEMENTAR");
+                        try {
+                            System.out.println("Digite a matrícula do aluno a remover:");
+                            mat = scanner.nextInt();
+                            scanner.nextLine();
+
+                            // Cria-se a chave de busca
+                            Aluno chaveRemover = new Aluno(mat, "", 0);
+
+                            long inicioRem = System.nanoTime();
+
+                            // Busca prévia para resgatar o nome (assumindo que pesquisar retorna o objeto T)
+                            Aluno alunoEncontrado = l.pesquisar(chaveRemover);
+
+                            // Executa o seu método original que retorna boolean
+                            boolean removido = l.remover(chaveRemover);
+
+                            long fimRem = System.nanoTime();
+
+                            double tempoRemMs = (fimRem - inicioRem) / 1_000_000.0;
+
+                            // Valida se a exclusão foi true e se a busca prévia encontrou o aluno
+                            if (removido && alunoEncontrado != null) {
+                                System.out.println("Aluno(a) " + alunoEncontrado.getNome() + " (Matrícula " + mat + ") removido com sucesso!");
+                            } else {
+                                System.out.println("Aluno com matrícula " + mat + " não encontrado.");
+                            }
+                            System.out.printf("Tempo de remoção: %.4f ms%n", tempoRemMs);
+
+                        } catch (Exception e) {
+                            scanner.nextLine();
+                            System.out.println("ERRO! " + e.getMessage());
+                        }
                         break;
                     case 6:
                         try{
