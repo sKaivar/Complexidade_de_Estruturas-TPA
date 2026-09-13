@@ -138,8 +138,47 @@ public class ListaEncadeada<T> implements IColecao<T>{
     //_______________________________Remover
     @Override
     public boolean remover(T valor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remover'");
+        return remover(valor, this.comparador);
+    }
+
+    // Permite remover por outro critério (mesmo padrão usado no pesquisar)
+    public boolean remover(T valor, Comparator<T> criterio) {
+        No<T> atual, ant;
+
+        atual = this.prim;
+        ant = null;
+
+        while (atual != null) {
+            int cmp = criterio.compare(valor, atual.getValor());
+
+            if (cmp == 0) {
+                if (ant == null) { // Removendo o primeiro elemento da lista
+                    this.prim = atual.getProx();
+                    if (this.prim == null) {
+                        this.ult = null;
+                    }
+                } else { // Removendo do meio ou do fim
+                    ant.setProx(atual.getProx());
+                    if (atual == this.ult) {
+                        this.ult = ant;
+                    }
+                }
+
+                this.quant--;
+                return true;
+            }
+
+            // Mesmo padrão e verificação utilizados no método remover,
+            //  para de procurar caso passe da posição que deveria estar.
+            if (this.ehOrdenada && criterio.getClass() == this.comparador.getClass() && cmp < 0) {
+                break;
+            }
+
+            ant = atual;
+            atual = atual.getProx();
+        }
+
+        return false;
     }
 
     @Override
