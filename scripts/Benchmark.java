@@ -35,7 +35,7 @@ public class Benchmark {
 
     private static final Comparator<Aluno> ComparaMatricula = new ComparadorAlunoPorMatricula();
     private static final Comparator<Aluno> ComparaNome = new ComparadorAlunoPorNome();
-    private static final int REPETICOES_BUSCA = 3;
+    private static final int REPETICOES_BUSCA = 11;
 
     public static void main(String[] args) throws IOException {
         File[] arquivos = (args.length > 0)
@@ -78,16 +78,25 @@ public class Benchmark {
             return;
         }
 
-        double buscaMatricula = medianaDeBusca(lista, new Aluno(alvo.getMatricula(), "", 0), ComparaMatricula); // Calcula tempo para resgatar apartir de matricula
-        double buscaNome = medianaDeBusca(lista, new Aluno(0, alvo.getNome(), 0), ComparaNome); // Calcula tempo para resgatar apartir de matricula
+        double buscaMatricula = medianaDeBusca(
+                lista,
+                new Aluno(alvo.getMatricula(), "", 0),
+                ComparaMatricula
+        );
+
+        double buscaNome = medianaDeBusca(
+                lista,
+                new Aluno(0, alvo.getNome(), 0),
+                ComparaNome
+        );
 
         inicio = System.nanoTime();
-        //boolean removido = lista.remover(new Aluno(alvo.getMatricula(), "", 0), ComparaMatricula);
+        boolean removido = lista.remover(new Aluno(alvo.getMatricula(), "", 0), ComparaMatricula);
         double remocao = ms(inicio, System.nanoTime());
 
-        //if (!removido) {
-        //    System.out.println("AVISO: falha ao remover o alvo em " + arquivo.getName());
-        //}
+        if (!removido) {
+            System.out.println("AVISO: falha ao remover o alvo em " + arquivo.getName());
+        }
 
         String regime = ordenada ? "ordenada" : "nao-ordenada";
         csv.printf("%s;%d;%s;%.4f;%.4f;%.4f;%.4f%n",
@@ -96,21 +105,35 @@ public class Benchmark {
                 arquivo.getName(), n, regime, montagem, buscaMatricula, buscaNome, remocao);
     }
 
-    private static double medianaDeBusca(ListaEncadeada<Aluno> lista, Aluno chave, Comparator<Aluno> criterio) {
+    private static double medianaDeBusca(
+            ListaEncadeada<Aluno> lista,
+            Aluno chave,
+            Comparator<Aluno> criterio) {
+
         double[] tempos = new double[REPETICOES_BUSCA];
+
         for (int i = 0; i < REPETICOES_BUSCA; i++) {
             long inicio = System.nanoTime();
-            lista.pesquisar(chave, criterio);
+
+            Aluno resultado = lista.pesquisar(chave, criterio);
+
             tempos[i] = ms(inicio, System.nanoTime());
+
+            if (resultado == null) {
+                System.out.println("AVISO: aluno não encontrado durante a busca.");
+            }// Check to see what it found was not null
         }
+
+        System.out.println(Arrays.toString(tempos));
+
         Arrays.sort(tempos);
+
         return tempos[REPETICOES_BUSCA / 2];
     }
+
+
 
     private static double ms(long inicio, long fim) {
         return (fim - inicio) / 1_000_000.0;
     }
 }
-
-// NAO TEM MEDICAO DE REMOCAO DE ELEMENTO
-//
