@@ -24,7 +24,7 @@ public interface IColecao<T> {
      * @return true caso o elemento tenha sido adicionado. Caso contrário retorna false.
      * 
      */
-    public boolean adicionar(T novoValor);
+    public boolean  adicionar(T novoValor);
     
     /**
      * Método para pesquisar por um elemento na estrutura e retorná-lo.

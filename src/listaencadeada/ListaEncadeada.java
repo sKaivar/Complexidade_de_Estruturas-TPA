@@ -1,6 +1,8 @@
 package listaencadeada;
 
 import colecao.IColecao;
+import dominio.Aluno;
+
 import java.util.Comparator;
 
 public class ListaEncadeada<T> implements IColecao<T>{
@@ -135,6 +137,27 @@ public class ListaEncadeada<T> implements IColecao<T>{
         return null;
     }
 
+    public ListaEncadeada<T> pesquisarTodosporNome(String nome){// Metodo para identificar multiplos usarios com o mesmo nome
+
+        ListaEncadeada<T> ListaNomesIguas = new ListaEncadeada<T>();
+        No<T> atual = prim;
+
+        while (atual != null) {
+
+            T elemento = atual.getValor();
+
+            Aluno aluno = (Aluno) elemento;
+
+            if (aluno.getNome().equals(nome)) {
+                ListaNomesIguas.adicionar(elemento);
+            }
+
+            atual = atual.getProx();
+        }
+
+        return ListaNomesIguas;
+    }
+
     //_______________________________Remover
     @Override
     public boolean remover(T valor) {
@@ -168,7 +191,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
                 return true;
             }
 
-            // Mesmo padrão e verificação utilizados no método remover,
+            // Mesmo padrão e verificação utilizados no metodo remover,
             //  para de procurar caso passe da posição que deveria estar.
             if (this.ehOrdenada && criterio.getClass() == this.comparador.getClass() && cmp < 0) {
                 break;
