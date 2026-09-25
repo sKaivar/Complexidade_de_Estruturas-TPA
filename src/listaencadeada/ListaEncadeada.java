@@ -137,7 +137,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
         return null;
     }
 
-    public ListaEncadeada<T> pesquisarTodosporNome(String nome){// Metodo para identificar multiplos usarios com o mesmo nome
+    public ListaEncadeada<T> pesquisarTodosporNome(T nome, Comparator<T> Criterio){// Metodo para identificar multiplos usarios com o mesmo nome
 
         ListaEncadeada<T> ListaNomesIguas = new ListaEncadeada<T>();
         No<T> atual = prim;
@@ -146,9 +146,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
             T elemento = atual.getValor();
 
-            Aluno aluno = (Aluno) elemento;
-
-            if (aluno.getNome().equals(nome)) {
+            if (Criterio.compare(nome, atual.getValor()) == 0) {
                 ListaNomesIguas.adicionar(elemento);
             }
 
@@ -204,6 +202,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
         return false;
     }
 
+    //______________________________Quantidade de Nos total
     @Override
     public int quantidadeNos() {
         return quant;

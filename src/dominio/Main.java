@@ -203,7 +203,7 @@ public class Main {
                             long inicioPesqNome = System.nanoTime();// Inicio da contagem de tempo
 
                             ListaEncadeada<Aluno> encontrados =
-                                    ((ListaEncadeada<Aluno>) l).pesquisarTodosporNome(nome); // Pesquisa todos Alunos com mesmo nome
+                                    ((ListaEncadeada<Aluno>) l).pesquisarTodosporNome(new Aluno(0, nome, 0), new ComparadorAlunoPorNome()); // Pesquisa todos Alunos com mesmo nome
 
                             if (encontrados.quantidadeNos() == 0) {
                                 System.out.println("Nenhum aluno encontrado com o nome: " + nome);
