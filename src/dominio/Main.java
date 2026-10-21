@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.Scanner;
 
+import arvorebinaria.*;
 import colecao.IColecao;
 import listaencadeada.*;
 
@@ -70,22 +71,21 @@ public class Main {
     public static void main(String[] args) {
 
 
-        IColecao<Aluno> l; //Object type IColecao
-        l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);//Initiates List
+        IColecao<Aluno> l = null; //Object type IColecao
         Aluno a;//Empty object class Aluno
         int ordenado = 0, mat, nota, resp = 10; //Ordenado (tells if user wants an ordered list or not), mat (matricula), nota, resp(any integer choice of user)
         String nome, todosAlunos; //nome (Aluno`s name), todoAlunos (print array with all students)
 
         Scanner scanner = new Scanner(System.in);
 
-        //______________________________________Escolha de ordenar ou nao a lista
+        //______________________________________Escolha de Lista ordenada, não ordenada ou árvore binária
         do {
             try {
-                System.out.println("Digite 1 para lista ordenada e 2 para lista não ordenada: ");
+                System.out.println("Digite 1 para lista ordenada, 2 para lista não ordenada e 3 para árvore binária: ");
                 ordenado = scanner.nextInt();
                 scanner.nextLine();
 
-                if(ordenado != 1 && ordenado != 2){
+                if(ordenado != 1 && ordenado != 2 && ordenado != 3){
                     System.out.println("Digite apenas números.\n");
                 }
             }catch (Exception e) {
@@ -95,7 +95,7 @@ public class Main {
 
             }
 
-        }while(ordenado != 1 && ordenado != 2);
+        }while(ordenado != 1 && ordenado != 2 && ordenado != 3);
 
         if(ordenado == 1){
             l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), true);//Object l has an empty list as value (by matricula)
@@ -104,8 +104,18 @@ public class Main {
             l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);//Object l has an empty list as value (It doesnt matter if by name or matricula)
 
 
+        } else if(ordenado == 3){
+            /*
+            ArvoreBinaria<Aluno> porNome =
+                    new ArvoreBinaria<>(new ComparadorAlunoPorNome());
+
+            ArvoreBinaria<Aluno> porMatricula =
+                    new ArvoreBinaria<>(new ComparadorAlunoPorMatricula());*/
+
+            l = new ArvoreBinaria<Aluno>(new ComparadorAlunoPorMatricula());
+
         }else{
-            System.out.println("Erro em decidir se lista é ordenada ou não.\n");
+            System.out.println("Erro em decidir se qual tipo de ordenação deseja.\n");
         }
 
         //______________________________________Inicia Menu
@@ -160,6 +170,7 @@ public class Main {
                             System.out.println("ERRO! " + e.getMessage());
                             scanner.nextLine();
                         }// Qualquer outra coisa, devolve erro
+                        System.out.println(l.quantidadeNos() + " - " + ((ArvoreBinaria<Aluno>) l).altura());
                         break;
 
                    //______________________________________Adicionar um Aluno

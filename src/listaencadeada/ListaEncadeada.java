@@ -75,7 +75,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
         ant = null;
 
         if(this.prim == null){//Se lista estiver vazia, cria novo no e adiciona no prim (primeiro na lista)
-            this.prim = this.ult=novoNo;
+            this.prim = this.ult = novoNo;
 
         }else{// Enquanto não é o ultimo da lista e é maior que o atual, vai para o próximo
 
@@ -94,8 +94,8 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
 
             } else{
-                ant.setProx(novoNo);
-                novoNo.setProx(atual);
+                ant.setProx(novoNo); //
+                novoNo.setProx(atual); //
             }
 
         }
