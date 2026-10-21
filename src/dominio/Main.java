@@ -198,6 +198,11 @@ public class Main {
                             todosAlunos = l.toString();
                             System.out.println(todosAlunos);// Prints all students in array
 
+                            if (l instanceof ArvoreBinaria<?>) {
+                                ArvoreBinaria<Aluno> arvore = (ArvoreBinaria<Aluno>) l;
+                                System.out.println(arvore.caminharEmNivel());
+                            }
+
                         } catch (Exception e) {
                             scanner.nextLine();
                             System.out.println("Se atente ao preencher os dados do aluno." + e.getMessage());

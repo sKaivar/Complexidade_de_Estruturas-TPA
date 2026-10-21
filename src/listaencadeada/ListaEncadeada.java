@@ -103,6 +103,39 @@ public class ListaEncadeada<T> implements IColecao<T>{
         return true;
     }
 
+    // Metodo adicionado para inserir um elemento ao final da lista (Adicionado para realizar metodo de percorrer em nivel)
+    public void enfileirar(T novoValor) {
+        No<T> novoNo = new No<>(novoValor);
+
+        if (prim == null) {
+            prim = novoNo;
+            ult = novoNo;
+        } else {
+            ult.setProx(novoNo);
+            ult = novoNo;
+        }
+
+        quant++;
+    }
+
+    // Metodo de remover e retornar o primeiro elemento da lista, para fins de percorrer em nivel
+    public T desenfileirar() {
+        if (prim == null) {
+            return null;
+        }// Se lista esta vazia, retorna null
+
+        T valor = prim.getValor(); // Resgata o primeiro valor da lista
+
+        prim = prim.getProx(); // Faz o primeiro elemento da lista ser o proximo
+
+        if (prim == null) {
+            ult = null;
+        }// Se o novo primeiro for vazio, o ultimo vai estar vazio tambem
+
+        quant--;// Quantidade de elementos da lista diminui em um
+
+        return valor;// Retorna o valor resgatado
+    }
 
     //_______________________________Pesquisar
     @Override

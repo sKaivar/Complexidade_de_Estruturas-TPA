@@ -1,5 +1,8 @@
 package arvorebinaria;
 
+import listaencadeada.ListaEncadeada;
+import listaencadeada.No;
+
 import java.util.Comparator;
 
 public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
@@ -49,7 +52,7 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
                 return false;
             }
 
-            if(resultado > 0){
+            if(resultado < 0){
                 //Adds node to the left
                 if(atual.esquerdo == null){
                     atual.esquerdo = new NoArvore<>(novoValor);
@@ -165,7 +168,51 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
 
     @Override
     public String caminharEmNivel() {
-        return "";
+
+        if (raiz == null) {
+            return "[]";
+        }// Se arvore estiver vazia, retorna vazio
+
+        ListaEncadeada<NoArvore<T>> fila = new ListaEncadeada<>(); // Cria uma lista de Nos de arvores
+        StringBuilder resultado = new StringBuilder("["); // Chamada para realizar os prints
+
+        fila.enfileirar(raiz);// Adiciona raiz na ultima posiçao da lista
+
+        boolean primeiroNivel = true;
+
+        while (fila.quantidadeNos() > 0) {
+
+            int quantidadeNivel = fila.quantidadeNos();// Resgata quantos nos na lista, e indica quantidade de niveis
+
+            if (!primeiroNivel) {
+                resultado.append("\n");
+            }// Quando entrar aqui, já realizou o processo de imprimir todos elementos de um nivel
+
+            primeiroNivel = false;
+
+            for (int i = 0; i < quantidadeNivel; i++) { // Enquanto i for menor que a quantidade de niveis
+
+                NoArvore<T> n = fila.desenfileirar();// Vai retirar o primeiro elemento da lista e pegar seu valor
+
+                if (i > 0) {
+                    resultado.append(", ");
+                }
+
+                resultado.append(n.valor);// Vai imprimir o valor resgatado
+
+                if (n.esquerdo != null) {
+                    fila.enfileirar(n.esquerdo);
+                }// Se tiver filho a esquerda, vai adicionar ele na lista
+
+                if (n.direito != null) {
+                    fila.enfileirar(n.direito);
+                }// Se tiver filho a direita, vai adicionar ele na lista
+            }
+
+        }// Enquanto existem nos na lista, existem niveis e o loop repete
+
+        resultado.append("]");// No final adiciona isso ao print
+        return resultado.toString(); // Retorna o print que realizou
     }
 
     @Override
