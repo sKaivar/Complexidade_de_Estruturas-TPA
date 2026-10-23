@@ -7,23 +7,25 @@ import java.util.Comparator;
 
 public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
 
-    private static class NoArvore<E>{
-        E valor;
-        NoArvore<E> esquerdo;
-        NoArvore<E> direito;
+    protected static class NoArvore<E>{
+        public E valor;
+        public NoArvore<E> esquerdo;
+        public NoArvore<E> direito;
 
-        NoArvore(E valor){
+        public NoArvore(E valor){
             this.valor = valor;
             this.esquerdo = null;
             this.direito = null;
         }
     }
 
-    private NoArvore<T> raiz;
+    protected NoArvore<T> raiz;
+    protected int quant;
 
     public ArvoreBinaria(Comparator<T> comparador) {
         super(comparador);
         this.raiz = null;
+        this.quant = 0;
     }
     //_____________________________Adicionar
 
@@ -38,7 +40,7 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
         //If raiz is empty, then valor added is the first node of the tree
         if(raiz == null){
             raiz = new NoArvore<>(novoValor);
-
+            quant++;
             return true;
         }
 
@@ -56,6 +58,7 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
                 //Adds node to the left
                 if(atual.esquerdo == null){
                     atual.esquerdo = new NoArvore<>(novoValor);
+                    quant++;
                     return true;
                 }
 
@@ -64,6 +67,7 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
                 //Adds node to the right
                 if(atual.direito == null){
                     atual.direito = new NoArvore<>(novoValor);
+                    quant++;
                     return true;
                 }
                 atual = atual.direito; //Points to the newest added node
@@ -102,7 +106,7 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
         return calcularAltura(raiz);
     }
 
-    private int calcularAltura(NoArvore<T> no){
+    protected int calcularAltura(NoArvore<T> no){
         if(no == null){
             return -1;
         }
@@ -117,10 +121,11 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
     }
 
     @Override
-    public int quantidadeNos() { // Method recursive
-        return contarNos(raiz);// It will grab the first root
+    public int quantidadeNos() {
+        return this.quant;
     }
 
+    // Mantido caso precise contar manualmente
     private int contarNos(NoArvore<T> no){
         if(no == null){
             return 0;
@@ -215,6 +220,7 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
         return resultado.toString(); // Retorna o print que realizou
     }
 
+    //_____________________________Remover
     @Override
     public boolean remover(T valor) {
         // Se a arvore esta vazia ou o valor passado for nulo, nao tem como remover
@@ -280,6 +286,5 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
         quant--; // Atualiza a quantidade total de nos
         return true;
     }
-
 
 }
