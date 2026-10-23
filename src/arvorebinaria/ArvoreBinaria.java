@@ -217,7 +217,68 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
 
     @Override
     public boolean remover(T valor) {
-        return false;
+        // Se a arvore esta vazia ou o valor passado for nulo, nao tem como remover
+        if (valor == null || raiz == null) {
+            return false;
+        }
+
+        NoArvore<T> atual = raiz;
+        NoArvore<T> pai = null;
+
+        // Procura o elemento na arvore guardando a referencia do pai
+        while (atual != null) {
+            int comp = comparador.compare(valor, atual.valor);
+
+            if (comp == 0) {
+                break; // Encontrou o elemento que deve ser removido
+            }
+
+            pai = atual;
+            if (comp < 0) {
+                atual = atual.esquerdo; // Vai procurar na esquerda
+            } else {
+                atual = atual.direito; // Vai procurar na direita
+            }
+        }
+
+        // Se chegou ao fim do caminho e nao achou ninguem
+        if (atual == null) {
+            return false;
+        }
+
+        // Caso 3: o no a ser removido tem dois filhos
+        // Buscamos o sucessor (menor elemento da subarvore da direita)
+        if (atual.esquerdo != null && atual.direito != null) {
+            NoArvore<T> paiSucessor = atual;
+            NoArvore<T> sucessor = atual.direito;
+
+            while (sucessor.esquerdo != null) {
+                paiSucessor = sucessor;
+                sucessor = sucessor.esquerdo;
+            }
+
+            // Copia o valor do sucessor pro no que queriamos deletar
+            atual.valor = sucessor.valor;
+
+            // O no que realmente vamos desligar da arvore é o sucessor
+            atual = sucessor;
+            pai = paiSucessor;
+        }
+
+        // Caso 1 e 2: o no tem no maximo um filho (ou e folha)
+        NoArvore<T> filho = (atual.esquerdo != null) ? atual.esquerdo : atual.direito;
+
+        // Se o no a remover for a propria raiz
+        if (pai == null) {
+            raiz = filho;
+        } else if (atual == pai.esquerdo) {
+            pai.esquerdo = filho; // Liga o filho do no removido no lado esquerdo do pai
+        } else {
+            pai.direito = filho; // Liga o filho do no removido no lado direito do pai
+        }
+
+        quant--; // Atualiza a quantidade total de nos
+        return true;
     }
 
 
