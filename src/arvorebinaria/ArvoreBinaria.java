@@ -1,9 +1,7 @@
 package arvorebinaria;
 
-import listaencadeada.ListaEncadeada;
-import listaencadeada.No;
-
 import java.util.Comparator;
+import listaencadeada.ListaEncadeada;
 
 public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
 
