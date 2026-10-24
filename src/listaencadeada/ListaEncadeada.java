@@ -6,7 +6,7 @@ import dominio.Aluno;
 import java.util.Comparator;
 
 public class ListaEncadeada<T> implements IColecao<T>{
-    private No<T> prim, ult;
+    private NoLista<T> prim, ult;
     private int quant;
     private final Comparator<T> comparador;
     private final boolean ehOrdenada;
@@ -22,7 +22,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
     @Override
     public String toString() {
-        No<T> aux = this.prim;
+        NoLista<T> aux = this.prim;
         StringBuilder s = new StringBuilder("[");
 
         while(aux != null){
@@ -52,7 +52,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
     }
 
     public boolean inserirElementoNaoOrd(T novoValor) {
-        No<T> novoNo = new No<>(novoValor);
+        NoLista<T> novoNo = new NoLista<>(novoValor);
 
         if (prim == null) {
             prim = novoNo;
@@ -68,8 +68,8 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
     public boolean inserirElementoOrd(T novoValor){
 
-        No<T> novoNo = new No<>(novoValor);
-        No<T> atual, ant;
+        NoLista<T> novoNo = new NoLista<>(novoValor);
+        NoLista<T> atual, ant;
 
         atual = this.prim;
         ant = null;
@@ -105,7 +105,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
     // Metodo adicionado para inserir um elemento ao final da lista (Adicionado para realizar metodo de percorrer em nivel)
     public void enfileirar(T novoValor) {
-        No<T> novoNo = new No<>(novoValor);
+        NoLista<T> novoNo = new NoLista<>(novoValor);
 
         if (prim == null) {
             prim = novoNo;
@@ -149,7 +149,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
             throw new IllegalArgumentException("Um comparador válido é necessário para a pesquisa.");
         }
 
-        No<T> atual = this.prim;
+        NoLista<T> atual = this.prim;
 
         while (atual != null) {
             int cmp = criterio.compare(valor, atual.getValor());
@@ -173,7 +173,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
     public ListaEncadeada<T> pesquisarTodosporNome(T nome, Comparator<T> Criterio){// Metodo para identificar multiplos usarios com o mesmo nome
 
         ListaEncadeada<T> ListaNomesIguas = new ListaEncadeada<T>();
-        No<T> atual = prim;
+        NoLista<T> atual = prim;
 
         while (atual != null) {
 
@@ -197,7 +197,7 @@ public class ListaEncadeada<T> implements IColecao<T>{
 
     // Permite remover por outro critério (mesmo padrão usado no pesquisar)
     public boolean remover(T valor, Comparator<T> criterio) {
-        No<T> atual, ant;
+        NoLista<T> atual, ant;
 
         atual = this.prim;
         ant = null;

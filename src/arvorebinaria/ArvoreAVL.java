@@ -1,6 +1,7 @@
 package arvorebinaria;
 
 import java.util.Comparator;
+import arvorebinaria.NoArvore;
 
 public class ArvoreAVL<T> extends ArvoreBinaria<T> {
 
@@ -61,7 +62,39 @@ public class ArvoreAVL<T> extends ArvoreBinaria<T> {
     //_____________________________Remover com balanceamento AVL
     @Override
     public boolean remover(T valor) {
-        return false;
+        if (pesquisar(valor) == null){
+            return false;
+        }
+
+        this.raiz = removerRecursivo(this.raiz, valor);
+        this.tamNo--;
+        return true;
+    }
+
+    private NoArvore<T> removerRecursivo(NoArvore<T> atual, T valor){
+        if (atual == null){
+            return null;
+        }
+        int comp = this.comparador.compare(valor, atual.getValor());
+
+        if (comp < 0){
+            atual.setEsquerda(removerRecursivo(atual.getEsquerda(), valor));
+        }else if (comp > 0){
+            atual.setDireita(removerRecursivo(atual.getDireita(), valor));
+        }else{
+            if(atual.getEsquerda() == null) return atual.getDireita();
+            if(atual.getDireita() == null) return atual.getEsquerda();
+
+            NoArvore<T> sucessor = atual.getDireita();
+            while(sucessor.getEsquerda() != null){
+                sucessor = sucessor.getEsquerda();
+            }
+
+            T menor = sucessor.getValor();
+            atual.setValor(menor);
+            atual.setDireita(removerRecursivo(atual.getDireita(), menor));
+        }
+        return atual;
     }
 
     private NoArvore<T> removerAVL(NoArvore<T> atual, T valor) {
@@ -72,25 +105,58 @@ public class ArvoreAVL<T> extends ArvoreBinaria<T> {
 
     // Calcula a diferenca de altura dos filhos: altura da esquerda menos altura da direita
     private int balanceamento(NoArvore<T> no) {
-        if (no == null) {
-            return 0;
-        }
-        return 0;
+        if(no == null) return 0;
+		int alturaEsq = calcularAltura(no.getEsquerda());
+		int alturaDir = calcularAltura(no.getDireita());
+		
+		return alturaEsq - alturaDir;
     }
 
-    // Metodo principal que avalia o fator de balanceamento e chama a rotacao certa
+    // Metodo principalque  avalia o fator de balanceamento e chama a rotacao certa
     private NoArvore<T> balancear(NoArvore<T> no) {
-        return no;
+        
+        int fator = balanceamento(no);
+
+		if(fator > 1){
+			// se o filho da esquerda tem peso para a direita
+			if(balanceamento(no.getEsquerda()) < 0){
+				no.setEsquerda(rotEsq(no.getEsquerda()));
+				}
+			return rotDir(no);
+		}
+
+		if(fator <-1){
+			// se o filho da direita tem peso para a esquerda
+			if(balanceamento(no.getDireita()) > 0){
+				no.setDireita(rotDir(no.getDireita()));
+			}
+			return rotEsq(no);
+		}
+	
+		return no;
+
     }
 
     // Rotacao simples para a direita
     private NoArvore<T> rotDir(NoArvore<T> a) {
-        return null;
+        NoArvore<T> b = a.getEsquerda();
+		NoArvore<T> aux = b.direito;
+
+		b.setDireita(a);
+		a.setEsquerda(aux);
+
+		return b;
     }
 
     // Rotacao simples para a esquerda
     private NoArvore<T> rotEsq(NoArvore<T> a) {
-        return null;
+        NoArvore<T> b = a.getDireita();
+		NoArvore<T> aux = b.getEsquerda();
+
+		b.setEsquerda(a);
+		a.setDireita(aux);
+
+		return b;
     }
 
 }

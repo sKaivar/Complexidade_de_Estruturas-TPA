@@ -3,20 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package listaencadeada;
+package arvorebinaria;
 
 /**
  *
  * @author victoriocarvalho
  */
-public class No<T> {
+public class NoArvore<T> {
     private T valor;
-    private No<T> prox;
+    private NoArvore<T> dir;
+    private NoArvore<T> esq;
 
     
-    public No(T valor){
+    public NoArvore(T valor){
         this.valor = valor;
-        this.prox=null;
+        this.dir = null;
+        this.esq = null;
     }
     /**
      * @return the valor
@@ -35,15 +37,23 @@ public class No<T> {
     /**
      * @return the prox
      */
-    public No<T> getProx() {
-        return prox;
+    public NoArvore<T> getDireita() {
+        return dir;
+    }
+
+    public NoArvore<T> getEsquerda() {
+        return esq;
     }
 
     /**
      * @param prox the prox to set
      */
-    public void setProx(No<T> prox) {
-        this.prox = prox;
+    public void setDireita(NoArvore<T> novoNo) {
+        this.dir = novoNo;
+    }
+    
+    public void setEsquerda(NoArvore<T> novoNo) {
+        this.esq = novoNo;
     }
     
     
