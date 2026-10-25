@@ -3,11 +3,9 @@ package arvorebinaria;
 import java.util.Comparator;
 
 import colecao.IColecao;
-import listaencadeada.NoLista;
 
 public abstract class ArvoreBinariaBase<T> implements IColecao<T>{
     protected final Comparator<T> comparador;
-    protected NoLista<T> root;
 
     protected ArvoreBinariaBase(Comparator<T> comparador) {
         this.comparador = comparador;
