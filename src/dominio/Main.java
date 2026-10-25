@@ -78,15 +78,15 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        //______________________________________Escolha de Lista ordenada, não ordenada ou árvore binária
+        //______________________________________Escolha de Lista ordenada, não ordenada, árvore binária ou AVL
         do {
             try {
-                System.out.println("Digite 1 para lista ordenada, 2 para lista não ordenada e 3 para árvore binária: ");
+                System.out.println("Digite 1 para lista ordenada, 2 para lista não ordenada, 3 para árvore binária e 4 para árvore AVL: ");
                 ordenado = scanner.nextInt();
                 scanner.nextLine();
 
-                if(ordenado != 1 && ordenado != 2 && ordenado != 3){
-                    System.out.println("Digite apenas números.\n");
+                if(ordenado != 1 && ordenado != 2 && ordenado != 3 && ordenado != 4){
+                    System.out.println("Digite apenas números entre 1 e 4.\n");
                 }
             }catch (Exception e) {
                 System.out.println("ERRO! " + e.getMessage());
@@ -95,7 +95,7 @@ public class Main {
 
             }
 
-        }while(ordenado != 1 && ordenado != 2 && ordenado != 3);
+        }while(ordenado != 1 && ordenado != 2 && ordenado != 3 && ordenado != 4);
 
         if(ordenado == 1){
             l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), true);//Object l has an empty list as value (by matricula)
@@ -103,16 +103,11 @@ public class Main {
         } else if (ordenado == 2) {
             l = new ListaEncadeada<Aluno>(new ComparadorAlunoPorMatricula(), false);//Object l has an empty list as value (It doesnt matter if by name or matricula)
 
-
         } else if(ordenado == 3){
-            /*
-            ArvoreBinaria<Aluno> porNome =
-                    new ArvoreBinaria<>(new ComparadorAlunoPorNome());
-
-            ArvoreBinaria<Aluno> porMatricula =
-                    new ArvoreBinaria<>(new ComparadorAlunoPorMatricula());*/
-
             l = new ArvoreBinaria<Aluno>(new ComparadorAlunoPorMatricula());
+
+        } else if(ordenado == 4){
+            l = new ArvoreAVL<Aluno>(new ComparadorAlunoPorMatricula());
 
         }else{
             System.out.println("Erro em decidir se qual tipo de ordenação deseja.\n");
@@ -170,7 +165,12 @@ public class Main {
                             System.out.println("ERRO! " + e.getMessage());
                             scanner.nextLine();
                         }// Qualquer outra coisa, devolve erro
-                        System.out.println(l.quantidadeNos() + " - " + ((ArvoreBinaria<Aluno>) l).altura());
+
+                        if (l instanceof ArvoreBinariaBase<?>) {
+                            System.out.println("Total de nós: " + l.quantidadeNos() + " - Altura da árvore: " + ((ArvoreBinariaBase<Aluno>) l).altura());
+                        } else {
+                            System.out.println("Total de nós: " + l.quantidadeNos());
+                        }
                         break;
 
                    //______________________________________Adicionar um Aluno
@@ -195,12 +195,17 @@ public class Main {
                             a = new Aluno(mat, nome, nota);
                             l.adicionar(a);// Adiciona aluno na lista
 
-                            todosAlunos = l.toString();
-                            System.out.println(todosAlunos);// Prints all students in array
+                            if (l.quantidadeNos() <= 20) {
+                                todosAlunos = l.toString();
+                                System.out.println(todosAlunos);// Prints all students in array
 
-                            if (l instanceof ArvoreBinaria<?>) {
-                                ArvoreBinaria<Aluno> arvore = (ArvoreBinaria<Aluno>) l;
-                                System.out.println(arvore.caminharEmNivel());
+                                if (l instanceof ArvoreBinaria<?>) {
+                                    ArvoreBinaria<Aluno> arvore = (ArvoreBinaria<Aluno>) l;
+                                    System.out.println(arvore.caminharEmNivel());
+                                }
+                            } else {
+                                System.out.println("Aluno cadastrado com sucesso: " + a);
+                                System.out.println("Total de alunos cadastrados: " + l.quantidadeNos());
                             }
 
                         } catch (Exception e) {
@@ -218,8 +223,14 @@ public class Main {
 
                             long inicioPesqNome = System.nanoTime();// Inicio da contagem de tempo
 
-                            ListaEncadeada<Aluno> encontrados =
-                                    ((ListaEncadeada<Aluno>) l).pesquisarTodosporNome(new Aluno(0, nome, 0), new ComparadorAlunoPorNome()); // Pesquisa todos Alunos com mesmo nome
+                            ListaEncadeada<Aluno> encontrados;
+                            if (l instanceof ListaEncadeada<?>) {
+                                encontrados = ((ListaEncadeada<Aluno>) l).pesquisarTodosporNome(new Aluno(0, nome, 0), new ComparadorAlunoPorNome()); // Pesquisa todos Alunos com mesmo nome
+                            } else if (l instanceof ArvoreBinaria<?>) {
+                                encontrados = ((ArvoreBinaria<Aluno>) l).pesquisarTodosporNome(new Aluno(0, nome, 0), new ComparadorAlunoPorNome());
+                            } else {
+                                encontrados = new ListaEncadeada<Aluno>();
+                            }
 
                             if (encontrados.quantidadeNos() == 0) {
                                 System.out.println("Nenhum aluno encontrado com o nome: " + nome);
@@ -234,7 +245,7 @@ public class Main {
                             scanner.nextLine();// Pega a matricula de quais dele o usuario deseja
 
                             Aluno encontradoPorMatricula = encontrados.pesquisar(
-                                    new Aluno(matricula, "", 0),
+                                     new Aluno(matricula, "", 0),
                                     new ComparadorAlunoPorMatricula()
                             );// Procura o Aluno com matricula que ele digitou
 
@@ -308,11 +319,12 @@ public class Main {
 
                             // Valida se a exclusão foi true e se a busca prévia encontrou o aluno
                             if (removido && alunoEncontrado != null) {
-                                System.out.println("Aluno(a) " + alunoEncontrado.getNome() + " (Matrícula " + mat + ") removido com sucesso!");
+                                System.out.println("Aluno " + alunoEncontrado.getNome() + " removido com sucesso.");
                             } else {
-                                System.out.println("Aluno com matrícula " + mat + " não encontrado.");
+                                System.out.println("Não foi possível remover. Aluno não encontrado.");
                             }
-                            System.out.printf("Tempo de remoção: %.4f ms%n", tempoRemMs);// Mostra tempo total gasto
+
+                            System.out.printf("Tempo de remoção: %.4f ms%n", tempoRemMs);// Registra tempo gasto
 
                         } catch (Exception e) {
                             scanner.nextLine();
@@ -320,12 +332,12 @@ public class Main {
                         }
                         break;
 
-                    //______________________________________Alterar dados de usuario
+                    //______________________________________Alterar Aluno
                     case 6:
                         try{
-                            System.out.println("Digite a matrícula do que deseja alterar");
+                            System.out.println("Digite a matrícula do aluno que deseja alterar:");
                             mat = scanner.nextInt();
-                            scanner.nextLine();// Recebe matricula do Aluno que deseja alterar
+                            scanner.nextLine();// Resgata matricula do usuario que deseja alterar
 
                             Aluno chaveMatricula = new Aluno(mat, "", 0);
                             Aluno encontradoPorMatricula = l.pesquisar(chaveMatricula); // Procura por Aluno que deseja alterar
@@ -379,7 +391,6 @@ public class Main {
                             }
 
                         } catch (Exception e) {
-                            scanner.nextLine();
                             System.out.println("ERRO! " + e.getMessage());
                         }
                         break;
