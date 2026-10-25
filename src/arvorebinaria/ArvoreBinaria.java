@@ -5,18 +5,6 @@ import listaencadeada.ListaEncadeada;
 
 public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
 
-    protected static class NoArvore<E>{
-        public E valor;
-        public NoArvore<E> esquerdo;
-        public NoArvore<E> direito;
-
-        public NoArvore(E valor){
-            this.valor = valor;
-            this.esquerdo = null;
-            this.direito = null;
-        }
-    }
-
     protected NoArvore<T> raiz;
     protected int quant;
 
@@ -98,12 +86,119 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
         return null; //If its not found, return null
     }
 
+    // Permite buscar por outro critério (ex: nome), varrendo a árvore em nível
+    public T pesquisar(T valor, Comparator<T> criterio) {
+        if (valor == null || raiz == null || criterio == null) {
+            return null;
+        }
+
+        ListaEncadeada<NoArvore<T>> fila = new ListaEncadeada<>();
+        fila.enfileirar(raiz);
+
+        while (fila.quantidadeNos() > 0) {
+            NoArvore<T> atual = fila.desenfileirar();
+
+            if (criterio.compare(valor, atual.valor) == 0) {
+                return atual.valor;
+            }
+
+            if (atual.esquerdo != null) {
+                fila.enfileirar(atual.esquerdo);
+            }
+            if (atual.direito != null) {
+                fila.enfileirar(atual.direito);
+            }
+        }
+
+        return null;
+    }
+
+    // Busca todos os elementos que atendem ao critério (ex: alunos com o mesmo nome)
+    public ListaEncadeada<T> pesquisarTodosporNome(T valor, Comparator<T> criterio) {
+        ListaEncadeada<T> encontrados = new ListaEncadeada<>();
+
+        if (valor == null || raiz == null || criterio == null) {
+            return encontrados;
+        }
+
+        ListaEncadeada<NoArvore<T>> fila = new ListaEncadeada<>();
+        fila.enfileirar(raiz);
+
+        while (fila.quantidadeNos() > 0) {
+            NoArvore<T> atual = fila.desenfileirar();
+
+            if (criterio.compare(valor, atual.valor) == 0) {
+                encontrados.adicionar(atual.valor);
+            }
+
+            if (atual.esquerdo != null) {
+                fila.enfileirar(atual.esquerdo);
+            }
+            if (atual.direito != null) {
+                fila.enfileirar(atual.direito);
+            }
+        }
+
+        return encontrados;
+    }
+
+    // Retorna o elemento na folha mais profunda da árvore (alvo do pior caso de busca)
+    public T folhaMaisProfunda() {
+        if (raiz == null) {
+            return null;
+        }
+
+        ListaEncadeada<NoArvore<T>> fila = new ListaEncadeada<>();
+        fila.enfileirar(raiz);
+
+        NoArvore<T> atual = null;
+
+        while (fila.quantidadeNos() > 0) {
+            atual = fila.desenfileirar();
+
+            if (atual.esquerdo != null) {
+                fila.enfileirar(atual.esquerdo);
+            }
+            if (atual.direito != null) {
+                fila.enfileirar(atual.direito);
+            }
+        }
+
+        return (atual != null) ? atual.valor : null;
+    }
+
     //_____________________________Tamanho da árvore
     @Override
     public int altura() {
-        return calcularAltura(raiz);
+        if (raiz == null) {
+            return -1;
+        }
+
+        // Medição iterativa por nível para não estourar a pilha em árvores degeneradas
+        ListaEncadeada<NoArvore<T>> fila = new ListaEncadeada<>();
+        fila.enfileirar(raiz);
+        int nivel = -1;
+
+        while (fila.quantidadeNos() > 0) {
+            nivel++;
+            int quantidadeNivel = fila.quantidadeNos();
+
+            for (int i = 0; i < quantidadeNivel; i++) {
+                NoArvore<T> n = fila.desenfileirar();
+
+                if (n.esquerdo != null) {
+                    fila.enfileirar(n.esquerdo);
+                }
+                if (n.direito != null) {
+                    fila.enfileirar(n.direito);
+                }
+            }
+        }
+
+        return nivel;
     }
 
+    // Mantido para fins de análise matemática no relatório
     protected int calcularAltura(NoArvore<T> no){
         if(no == null){
             return -1;
@@ -205,11 +300,11 @@ public class ArvoreBinaria<T> extends ArvoreBinariaBase<T> {
 
                 if (n.esquerdo != null) {
                     fila.enfileirar(n.esquerdo);
-                }// Se tiver filho a esquerda, vai adicionar ele na lista
+                } // Se tiver filho a esquerda, vai adicionar ele na lista
 
                 if (n.direito != null) {
                     fila.enfileirar(n.direito);
-                }// Se tiver filho a direita, vai adicionar ele na lista
+                } // Se tiver filho a direita, vai adicionar ele na lista
             }
 
         }// Enquanto existem nos na lista, existem niveis e o loop repete
