@@ -49,6 +49,11 @@ public class Benchmark {
             System.out.println("Nenhum arquivo de entrada encontrado.");
             return;
         }
+
+        arquivos = Arrays.stream(arquivos)
+                .filter(a -> a.getName().matches("entrada\\d+(_bal)?\\.txt"))
+                .toArray(File[]::new); // Filtra os arquivos, caso tenha algum com outro nome
+
         Arrays.sort(arquivos, Comparator.comparingLong(File::length));
 
         //File saida = new File("relatorio/medicoes.csv");
@@ -89,8 +94,22 @@ public class Benchmark {
                 );
 
                 for (File arquivo : arquivos) {
-                    medirArvoreBinaria(arquivo, csv, teste);
-                    medirArvoreBinariaAvl(arquivo, csv, teste);
+
+                    String nomeArquivo = arquivo.getName();
+
+                    if (nomeArquivo.matches("entrada\\d+_bal\\.txt")) {
+
+                        // Cenário 2: árvore binária comum com arquivo balanceado
+                        medirArvoreBinaria(arquivo, csv, teste);
+
+                    } else {
+
+                        // Cenário 1: árvore binária comum com arquivo crescente
+                        medirArvoreBinaria(arquivo, csv, teste);
+
+                        // Cenário 3: AVL com arquivo crescente
+                        medirArvoreBinariaAvl(arquivo, csv, teste);
+                    }
                 }
             }
         }
@@ -199,7 +218,10 @@ public class Benchmark {
             System.out.println("AVISO: falha ao remover o alvo em " + arquivo.getName());
         }
 
-        String regime = "Arvore Binaria";
+        String regime = arquivo.getName().endsWith("_bal.txt")
+                ? "ABB_balanceada"
+                : "ABB_ordenada";
+
         csv.printf("%d;%s;%d;%s;%.4f;%.4f;%.4f;%.4f%n",
                 teste,arquivo.getName(), n, regime, montagem, buscaMatricula, buscaNome, remocao);
         System.out.printf("%-28s %10d %-16s %12.3f %12.4f %12.4f %12.4f%n",
@@ -266,7 +288,7 @@ public class Benchmark {
             System.out.println("AVISO: falha ao remover o alvo em " + arquivo.getName());
         }
 
-        String regime = "Arvore AVL";
+        String regime = "AVL_ordenada";
         csv.printf("%d;%s;%d;%s;%.4f;%.4f;%.4f;%.4f%n",
                 teste,arquivo.getName(), n, regime, montagem, buscaMatricula, buscaNome, remocao);
         System.out.printf("%-28s %10d %-16s %12.3f %12.4f %12.4f %12.4f%n",
