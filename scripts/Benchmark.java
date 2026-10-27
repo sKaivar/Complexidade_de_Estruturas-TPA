@@ -37,7 +37,7 @@ public class Benchmark {
     private static final Comparator<Aluno> ComparaMatricula = new ComparadorAlunoPorMatricula();
     private static final Comparator<Aluno> ComparaNome = new ComparadorAlunoPorNome();
     private static final int REPETICOES_BUSCA = 11;
-    private static final int QUANT_TESTES = 10;
+    private static final int QUANT_TESTES = 6;
 
     public static void main(String[] args) throws IOException {
         File[] arquivos = (args.length > 0)
@@ -117,6 +117,7 @@ public class Benchmark {
         System.out.println("\nMedições gravadas em " + saida.getPath());
     }
 
+    /*
     //__________________________________Medicao tempo Lista Encadeada
     private static void medir(File arquivo, boolean ordenada, PrintWriter csv) {
         ListaEncadeada<Aluno> lista = new ListaEncadeada<>(ComparaMatricula, ordenada);
@@ -182,7 +183,7 @@ public class Benchmark {
         Arrays.sort(tempos);
 
         return tempos[REPETICOES_BUSCA / 2];
-    }
+    }*/
 
     //__________________________________Medicao tempo Arvore Binaria
     private static void medirArvoreBinaria(File arquivo, PrintWriter csv, int teste) {
@@ -201,13 +202,13 @@ public class Benchmark {
         double buscaMatricula = medianaDeBuscaArvore(
                 arvoreBinaria,
                 new Aluno(alvo.getMatricula(), "", 0),
-                ComparaMatricula
+                true
         );
 
         double buscaNome = medianaDeBuscaArvore(
                 arvoreBinaria,
                 new Aluno(0, alvo.getNome(), 0),
-                ComparaNome
+                false
         );
 
         inicio = System.nanoTime();
@@ -231,14 +232,20 @@ public class Benchmark {
     private static double medianaDeBuscaArvore(
             ArvoreBinaria<Aluno> arvoreBinaria,
             Aluno chave,
-            Comparator<Aluno> criterio) {
+            boolean porMatricula) {
 
         double[] tempos = new double[REPETICOES_BUSCA];
 
         for (int i = 0; i < REPETICOES_BUSCA; i++) {
             long inicio = System.nanoTime();
 
-            Aluno resultado = arvoreBinaria.pesquisar(chave, criterio);
+            Aluno resultado;
+
+            if (porMatricula) {
+                resultado = arvoreBinaria.pesquisar(chave);
+            } else {
+                resultado = arvoreBinaria.pesquisar(chave, ComparaNome);
+            }
 
             tempos[i] = ms(inicio, System.nanoTime());
 
@@ -271,13 +278,13 @@ public class Benchmark {
         double buscaMatricula = medianaDeBuscaArvoreAvl(
                 arvoreAvl,
                 new Aluno(alvo.getMatricula(), "", 0),
-                ComparaMatricula
+                true
         );
 
         double buscaNome = medianaDeBuscaArvoreAvl(
                 arvoreAvl,
                 new Aluno(0, alvo.getNome(), 0),
-                ComparaNome
+                false
         );
 
         inicio = System.nanoTime();
@@ -298,14 +305,20 @@ public class Benchmark {
     private static double medianaDeBuscaArvoreAvl(
             ArvoreAVL<Aluno> arvoreAVL,
             Aluno chave,
-            Comparator<Aluno> criterio) {
+            boolean porMatricula) {
 
         double[] tempos = new double[REPETICOES_BUSCA];
 
         for (int i = 0; i < REPETICOES_BUSCA; i++) {
             long inicio = System.nanoTime();
 
-            Aluno resultado = arvoreAVL.pesquisar(chave, criterio);
+            Aluno resultado;
+
+            if (porMatricula) {
+                resultado = arvoreAVL.pesquisar(chave);
+            } else {
+                resultado = arvoreAVL.pesquisar(chave, ComparaNome);
+            }
 
             tempos[i] = ms(inicio, System.nanoTime());
 
